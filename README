@@ -1,6 +1,6 @@
 This repo contains the code for a poker game played between 'N' players. This code gives game statistics only.
 This code gives pre-flop percentages of the HERO's hand in a N-player table.
-On a side note, the percentages are pretty accurate and I myself use them while playing online poker. There are still some edge cases not taken into account but they hardly impact the pre-flop percentages.
+On a side note, the percentages are pretty accurate and I myself use them while playing online poker. There are still some edge cases not taken into account but they are so rare that they hardly impact the pre-flop percentages.
 
 
 Dependencies: This shows the file dependencies in the code. The main code is PreFlopPercentages.py.
