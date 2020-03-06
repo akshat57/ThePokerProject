@@ -9,7 +9,7 @@ Cards -> Poker -> PokerHands -> PokerRules -> PreFlopPercentages
 
 
 FUTURE WORK: This code doesn't take into account the play between different players. Also, only pre-flop percentages are given. 
-The game changes dramatically post-flop and with the turn and the river. It would be ncie to encode that into the game. 
+The game changes dramatically post-flop and with the turn and the river. It would be nice to encode that into the game. 
 
 Shoot me an email in case you are interested in collaborating or extending the code.
 
