@@ -5,5 +5,7 @@ On a side note, the percentages are pretty accurate and I myself use them while 
 
 Dependencies: This shows the file dependencies in the code. The main code is PreFlopPercentages.py.
 
-Cards -> Poker -> PokerHands -> PokerRules -> PreFlopPercentages
+Cards -> Poker -> PokerHands -> PokerRules -> PokerGame
+
+PokerGame also has code to calculate pre-flop percentages
 
