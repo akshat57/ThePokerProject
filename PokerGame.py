@@ -21,9 +21,9 @@ import random
 
 
 class Game(Check_Hand):
-    def __init__(self, heros_hand, num_players, seed):
+    def __init__(self, heros_hand, num_players):
         self.taken_card = [heros_hand[0], heros_hand[1]]
-        self.num_players = num_players
+        self.num_players = num_players  #total number of players
     
         self.Hero = PokerPlayer(heros_hand[0], heros_hand[1])
         self.Other_Players()
@@ -32,12 +32,12 @@ class Game(Check_Hand):
         
         
     def Other_Players(self):
-        self.Players = []
+        self.Players = [self.Hero]
         for i in range(self.num_players-1):
             self.Players.append(PokerPlayer( self.new_card(), self.new_card()))
                 
     def new_card(self):
-        for t in range(50):
+        for t in range(10000):
             card = random.randint(1,52)
             if card not in self.taken_card:
                 self.taken_card.append(card)
@@ -52,23 +52,21 @@ class Game(Check_Hand):
         hero_hand = Check_Hand(self.Hero, self.Table)
         self.player_results.append([hero_hand.points, hero_hand.high, hero_hand.next_high, PointsToHand(hero_hand.points)])
         
-        for i in range(self.num_players-1):
+        for i in range(1, self.num_players):
             player_hand = Check_Hand(self.Players[i], self.Table)
             self.player_results.append([player_hand.points, player_hand.high, player_hand.next_high, PointsToHand(player_hand.points) ])
                       
         self.Winner()
-        if self.winner == 0:
-            self.heroWins = True
-            self.split = False
-            self.heroLost = False
-        elif self.winner == -1:
-            self.heroWins = False
-            self.split = True
-            self.heroLost = False
-        else:
-            self.heroWins = False
-            self.split = False
-            self.heroLost = True
+        if not self.split:
+            if self.winner == 0:
+                self.heroWins = True
+                self.heroLost = False
+            else:
+                self.heroWins = False
+                self.heroLost = True
+
+        self.winning_hand = self.player_results[self.winner][-1]
+
             
         #self.Show_Game()
         
@@ -76,13 +74,14 @@ class Game(Check_Hand):
     
     def Winner(self):
         winner = 0
+        split = False
         
         for i in range(1,self.num_players):
             if self.player_results[i][0] > self.player_results[winner][0]:
                 winner = i
-                
+
             elif self.player_results[i][0] == self.player_results[winner][0]:
-                if (self.player_results[i][2] != None and self.player_results[winner][2] != None):
+                if (self.player_results[i][1] != None and self.player_results[winner][1] != None):
                     if self.player_results[i][1] > self.player_results[winner][1]:
                         winner = i
                     
@@ -90,13 +89,16 @@ class Game(Check_Hand):
                         if (self.player_results[i][2] != None and self.player_results[winner][2] != None):
                             if self.player_results[i][2] > self.player_results[winner][2]:
                                 winner = i
+                            else:
+                                split = True
                         else:
-                            winner = -1
+                            split = True
                 else:
-                    winner = -1
-               
+                    split = True
+            
+
         self.winner = winner
-        return True
+        self.split = split
 
     
     def Show_Game(self):
@@ -107,27 +109,17 @@ class Game(Check_Hand):
         
         if self.winner == 0:
             print('WINNER = HERO!!')
-            print(self.Hero.show_cards(), self.player_results[self.winner][3])
-            print('\nOther Players')
-            
-            for i in range(self.num_players-1):
-                print(self.Players[i].show_cards(), self.player_results[i+1][3])
-            
-        elif self.winner == -1:
+            print('WINNER = PLAYER ', self.winner, self.player_results[self.winner][3], self.player_results[self.winner])
+            print(self.Players[self.winner].show_cards() )
+        elif self.split:
             print('SPLIT POT')
-            print('\nAll Players')
-            print(self.Hero.show_cards())
-            for i in range(self.num_players-1):
-                print(self.Players[i].show_cards(), self.player_results[i+1][3])
         else:
-            print('WINNER = PLAYER ', self.winner)
-            print(self.Players[self.winner-1].show_cards())
+            print('WINNER = PLAYER ', self.winner, self.player_results[self.winner][3], self.player_results[self.winner])
+            print(self.Players[self.winner].show_cards() )
             
-            print('\nOther Players')
-            print(self.Hero.show_cards())
-            for i in range(self.num_players-1):
-                if i != self.winner-1:
-                    print(self.Players[i].show_cards(), self.player_results[i+1][3])
+        print('\nALL PLAYERS')
+        for i in range(self.num_players):
+                print('PLAYER:', i, '-->', self.Players[i].show_cards(), self.player_results[i][0], self.player_results[i][3], self.player_results[self.winner])
             
                   
 
@@ -189,53 +181,54 @@ class MyHand_Odds(Game):
 
 # In[ ]:
 
+if __name__ == '__main__':
+    ###This code can be used to calculate pre-flop percentages
+    ####Best Off- Suited Hands
+    num_players = 8
 
-####Best Off- Suited Hands
-num_players = 8
+    f= open( str(num_players) + "players.txt","w")
 
-f= open( str(num_players) + "players.txt","w")
+    suite = 'OffSuited'
+    sequence = [1, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]
 
-suite = 'OffSuited'
-sequence = [1, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]
+    counter = 0
+    total = 0
+    for i, card1 in enumerate(sequence):
+        for j in range(i, 13):
+            total += 1
+            card2 = sequence[j]
+            MyHand = MyHand_Odds(num_players, card1, card2, suite).win 
+            if MyHand > 1/num_players:
+                #print(card1, card2, suite,  MyHand)
+                f.write("%d %d %s %f \n" %(card1, card2, suite,  MyHand))
+                counter += 1
+                
+    num_offsuited = counter
+    total_offsuited = total
+    f.write("\n Percentage of off-suited hands you I should play = %f" %(counter/float(total)))
+    #print('\n Percentage of off-suited hands you I should play = ', counter/total)
+    print('\n')
+    f.write('\n')
 
-counter = 0
-total = 0
-for i, card1 in enumerate(sequence):
-    for j in range(i, 13):
-        total += 1
-        card2 = sequence[j]
-        MyHand = MyHand_Odds(num_players, card1, card2, suite).win 
-        if MyHand > 1/num_players:
-            #print(card1, card2, suite,  MyHand)
-            f.write("%d %d %s %f \n" %(card1, card2, suite,  MyHand))
-            counter += 1
-            
-num_offsuited = counter
-total_offsuited = total
-f.write("\n Percentage of off-suited hands you I should play = %f" %(counter/float(total)))
-#print('\n Percentage of off-suited hands you I should play = ', counter/total)
-print('\n')
-f.write('\n')
+    suite = 'Suited'
+    sequence = [1, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]
 
-suite = 'Suited'
-sequence = [1, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]
+    for i, card1 in enumerate(sequence):
+        for j in range(i+1, 13):
+            total += 1
+            card2 = sequence[j]
+            MyHand = MyHand_Odds(num_players, card1, card2, suite).win 
+            if MyHand > 1/num_players:
+                #print(card1, card2, suite,  MyHand)
+                f.write("%d %d %s %f \n" %(card1, card2, suite,  MyHand))
+                counter += 1
+                
+    f.write("\n Percentage of suited hands you I should play = %f" %((counter-num_offsuited)/float(total-total_offsuited)))
+    f.write('\n')
+    #print('\n Percentage of suited hands you I should play = ', (counter-num_offsuited)/(total-total_offsuited))
+    #print('\n')
 
-for i, card1 in enumerate(sequence):
-    for j in range(i+1, 13):
-        total += 1
-        card2 = sequence[j]
-        MyHand = MyHand_Odds(num_players, card1, card2, suite).win 
-        if MyHand > 1/num_players:
-            #print(card1, card2, suite,  MyHand)
-            f.write("%d %d %s %f \n" %(card1, card2, suite,  MyHand))
-            counter += 1
-            
-f.write("\n Percentage of suited hands you I should play = %f" %((counter-num_offsuited)/float(total-total_offsuited)))
-f.write('\n')
-#print('\n Percentage of suited hands you I should play = ', (counter-num_offsuited)/(total-total_offsuited))
-#print('\n')
-
-#print('Percentage of hands you should play = ', counter / total)
-f.write('Percentage of hands you should play = %f' %(counter / float(total)))
-f.close()
+    #print('Percentage of hands you should play = ', counter / total)
+    f.write('Percentage of hands you should play = %f' %(counter / float(total)))
+    f.close()
 

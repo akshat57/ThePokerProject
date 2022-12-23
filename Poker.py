@@ -14,69 +14,81 @@
 # In[9]:
 
 
-from Cards import *
+from Cards import Card
+import random
 
 
 # In[2]:
 
 
-class PokerPlayer(CardSuite, CardNumber, CardType):
+class PokerPlayer(Card):
     def __init__(self, n1, n2):
-        self.card1 = CardNumber(n1).card
-        self.type1 = CardType(self.card1).cardtype()
-        self.suite1 = CardSuite(n1).suite
-
-        
-        self.card2 = CardNumber(n2).card
-        self.type2 = CardType(self.card2).cardtype()
-        self.suite2 = CardSuite(n2).suite
+        if n1 == n2:#initializaing everything to None
+            self.card1 = Card(0)
+            self.card2 = Card(0)
+            self.valid = False
+        else:
+            self.card1 = Card(n1)
+            self.card2 = Card(n2)
+            self.valid = True
         
     def show_types(self):
-        return [ (self.type1, self.suite1), (self.type2, self.suite2) ]
+        return [ (self.card1.type, self.card1.suite), (self.card2.type, self.card2.suite) ]
     
     def show_cards(self):
-        return [ (self.card1, self.suite1), (self.card2, self.suite2) ]
+        return [ (self.card1.number, self.card1.suite), (self.card2.number, self.card2.suite) ]
     
     def all_suites(self):
-        return [self.suite1, self.suite2]
+        return [self.card1.suite, self.card2.suite]
 
+    def all_cards(self):
+        return [self.card1.number, self.card2.number]
+       
 
 # In[3]:
 
 
-class PokerTable(CardSuite, CardNumber, CardType):
+class PokerTable(Card):
     def __init__(self, n1, n2, n3, n4, n5):#in order of appearence
-        self.card1 = CardNumber(n1).card
-        self.type1 = CardType(self.card1).cardtype()
-        self.suite1 = CardSuite(n1).suite
-
-        self.card2 = CardNumber(n2).card
-        self.type2 = CardType(self.card2).cardtype()
-        self.suite2 = CardSuite(n2).suite
-        
-        self.card3 = CardNumber(n3).card
-        self.type3 = CardType(self.card3).cardtype()
-        self.suite3 = CardSuite(n3).suite
-        
-        self.card4 = CardNumber(n4).card
-        self.type4 = CardType(self.card4).cardtype()
-        self.suite4 = CardSuite(n4).suite
-        
-        self.card5 = CardNumber(n5).card
-        self.type5 = CardType(self.card5).cardtype()
-        self.suite5 = CardSuite(n5).suite
+        if len(set([n1, n2, n3, n4, n5])) != 5:
+            self.card1, self.card2, self.card3, self.card4, self.card5 = Card(0), Card(0), Card(0), Card(0), Card(0)
+            self.valid = False
+        else:
+            self.card1 = Card(n1)
+            self.card2 = Card(n2)
+            self.card3 = Card(n3)
+            self.card4 = Card(n4)
+            self.card5 = Card(n5)
+            self.valid = True
         
     def show_types(self):
-        return [(self.type1, self.suite1), (self.type2, self.suite2), (self.type3, self.suite3), (self.type4, self.suite4), (self.type5, self.suite5)]
+        return [(self.card1.type, self.card1.suite), (self.card2.type, self.card2.suite), (self.card3.type, self.card3.suite), (self.card4.type, self.card4.suite), (self.card5.type, self.card5.suite)]
 
     def show_cards(self):
-        return [(self.card1, self.suite1), (self.card2, self.suite2), (self.card3, self.suite3), (self.card4, self.suite4), (self.card5, self.suite5)]
+        return [(self.card1.number, self.card1.suite), (self.card2.number, self.card2.suite), (self.card3.number, self.card3.suite), (self.card4.number, self.card4.suite), (self.card5.number, self.card5.suite)]
     
     def all_suites(self):
-        return [self.suite1, self.suite2, self.suite3, self.suite4, self.suite5]
+        return [self.card1.suite, self.card2.suite, self.card3.suite, self.card4.suite, self.card5.suite]
     
     def all_cards(self):
-        return [self.card1, self.card2, self.card3, self.card4, self.card5]
+        return [self.card1.number, self.card2.number, self.card3.number, self.card4.number, self.card5.number]
         
     
 
+if __name__ == '__main__':
+
+    ##Checking Poker Player
+    player = PokerPlayer(42, 42)
+    print(player.show_cards(), player.show_types(), player.all_suites())
+    for i in range(5):
+        player = PokerPlayer(random.randint(1,52), random.randint(1,52))
+        print(i, player.show_cards(), player.show_types(), player.all_suites(), player.all_cards())
+
+    print('\n', '-'*50, '\n')
+
+    ##Checking PokerTable
+    table = PokerTable(42, 42, 42, 42, 42)
+    print(table.show_cards(), table.show_types(), table.all_suites(), table.all_cards())
+    for i in range(5):
+        table = PokerTable(random.randint(1,52), random.randint(1,52), random.randint(1,52), random.randint(1,52), random.randint(1,52))
+        print(i, table.show_cards(), table.show_types(), table.all_suites(), table.all_cards())

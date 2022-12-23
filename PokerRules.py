@@ -38,7 +38,7 @@ class Check_Hand(NumberHands,SuiteAndSequenceHands):
         
         if self.sas_hands.royal_flush == True:
             self.points = 10
-            self.high = None
+            self.high = self.sas_hands.straightflush_high
             self.next_high = None
         
         elif self.sas_hands.straight_flush == True:
@@ -48,18 +48,18 @@ class Check_Hand(NumberHands,SuiteAndSequenceHands):
             
         elif self.number_hands.fourOfAKind == True:
             self.points = 8
-            self.high = None
-            self.next_high = None
+            self.high = self.number_hands.most_frequent_card
+            self.next_high = max(set(self.number_hands.all_cards) - set([self.number_hands.most_frequent_card]))
             
         elif self.number_hands.fullHouse == True:
             self.points = 7
-            self.high = self.number_hands.high
-            self.next_high = self.number_hands.next_high
+            self.high = self.number_hands.most_frequent_card
+            self.next_high = self.number_hands.next_most_frequent_card
             
         elif self.sas_hands.flush == True:
             self.points = 6
             self.high =  self.sas_hands.flush_high
-            self.next_high = None
+            self.next_high = None#not included when class between flush high
 
         elif self.sas_hands.straight == True:
             self.points = 5
@@ -68,23 +68,23 @@ class Check_Hand(NumberHands,SuiteAndSequenceHands):
             
         elif self.number_hands.threeOfAKind == True:
             self.points = 4
-            self.high = self.number_hands.high
-            self.next_high = self.number_hands.next_high
+            self.high = self.number_hands.most_frequent_card
+            self.next_high =  max(set(self.number_hands.all_cards) - set([self.number_hands.most_frequent_card]))
             
         elif self.number_hands.twopair == True:
             self.points = 3
-            self.high = self.number_hands.high
-            self.next_high = self.number_hands.next_high
+            self.high = self.number_hands.most_frequent_card
+            self.next_high = self.number_hands.next_most_frequent_card
             
         elif self.number_hands.pair == True:
             self.points = 2
-            self.high = self.number_hands.high
-            self.next_high = self.number_hands.next_high
+            self.high = self.number_hands.most_frequent_card
+            self.next_high = max(set(self.number_hands.all_cards) - set([self.number_hands.most_frequent_card]))
             
         else:
             self.points = 1
             self.high = self.number_hands.highcard
-            self.next_high = self.number_hands.next_high
+            self.next_high = max(set(self.number_hands.all_cards) - set([self.high]))
             
         
         #elif self

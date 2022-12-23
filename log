@@ -1,0 +1,24 @@
+50 23
+26 14 44 24 25
+[(11, 'Spades'), (10, 'Hearts')] [(13, 'Hearts'), (1, 'Hearts'), (5, 'Spades'), (11, 'Hearts'), (12, 'Hearts')]
+
+Straight =  True 
+Flush =  True 
+StraightFlush =  True 
+RoyalFlush =  True
+Straigh high: 14 | Flush Suite: Hearts | Flush high: 14 | StraightFlushHigh: 14
+None
+-------------------------------------------------- 
+
+33 52
+40 10 51 49 50
+[(7, 'Clubs'), (13, 'Spades')] [(1, 'Spades'), (10, 'Diamonds'), (12, 'Spades'), (10, 'Spades'), (11, 'Spades')]
+
+Straight =  True 
+Flush =  True 
+StraightFlush =  True 
+RoyalFlush =  True
+Straigh high: 14 | Flush Suite: Spades | Flush high: 14 | StraightFlushHigh: 14
+None
+-------------------------------------------------- 
+

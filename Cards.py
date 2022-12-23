@@ -12,84 +12,66 @@
 40-52 : Spades
 '''
 
+###Functions defining card suite, card number, and card name/type
 
 # In[2]:
 
-
-class CardSuite():
+class Card():
     def __init__(self, n):
-        if n < 1 or n > 52:
-            self.suite = None
-        else:
-            if n//13 == 0 or (n//13 == 1 and n%13 == 0):#Diamonds
-                self.suite = 'Diamonds'
-            elif n//13 == 1 or (n//13 == 2 and n%13 == 0):#Diamonds
-                self.suite = 'Hearts'
-            elif n//13 == 2 or (n//13 == 3 and n%13 == 0):#Diamonds
-                self.suite = 'Clubs'
-            else: 
-                self.suite = 'Spades'
-            
-    def suite(self):
-        return self.suite
-        
+        self.n = n
+
+        #initialize cards
+        self.suite = self.cardSuite(n)
+        self.number = self.cardNumber(n)
+        self.type = self.cardType(self.number)
+
+    def cardSuite(self, n):
+        suite = None
+
+        if n >=1 and n <= 13:#Diamonds
+            suite = 'Diamonds'
+        elif n >=14 and n <= 26:
+            suite = 'Hearts'
+        elif n >=27 and n <= 39:
+            suite = 'Clubs'
+        elif  n >=40 and n <= 52:
+            suite = 'Spades'
+
+        return suite
 
 
-# In[3]:
+    def cardNumber(self, n):
+        number = None
 
-
-class CardNumber():
-    def __init__(self, n):
-        if n < 1 or n > 52:
-            self.card = None
-        else:
+        if n >= 1 and n <= 52:
             if n%13 != 0:
-                self.card = n%13
+                number= n%13
             else:
-                self.card = 13
-                
-    def card(self):
-        return self.card
+                number = 13
 
-        
+        return number
 
 
-# In[4]:
+    def cardType(self, n):
+        card_type = None
 
-
-class CardType():
-    def __init__(self, n):
-        if n < 1 or n > 13:
-            self.type = None
-        else:
+        if n != None:
             if n == 1:
-                self.type = 'Ace'
-            elif n == 2:
-                self.type = '2'
-            elif n == 3:
-                self.type = '3'
-            elif n == 4:
-                self.type = '4'
-            elif n == 5:
-                self.type = '5'
-            elif n == 6:
-                self.type = '6'
-            elif n == 7:
-                self.type = '7'
-            elif n == 8:
-                self.type = '8'
-            elif n == 9:
-                self.type = '9'
-            elif n == 10:
-                self.type = '10'
+                card_type = 'Ace'
+            elif n >= 2 and n <= 10:
+                card_type = str(n)
             elif n == 11:
-                self.type = 'Jack'
+                card_type = 'Jack'
             elif n == 12:
-                self.type = 'Queen'
+                card_type = 'Queen'
             elif n == 13:
-                self.type = 'King'
-                
-    def cardtype(self):
-        return self.type
-                
+                card_type = 'King'
 
+        return card_type
+
+
+if __name__ == '__main__':
+
+    for i in range(0, 54):
+        card = Card(i)
+        print(i, card.suite, card.number, card.type)
